@@ -193,8 +193,30 @@ int q_size(queue_t *q)
  */
 void q_reverse(queue_t *q)
 {
-    /* TODO: You need to write the code for this function */
-    /* TODO: Remove the above comment when you are about to implement. */
+    /* q is NULL or empty */
+    if (!q || q->size == 0) {
+        return;
+    }
+    /* Queue has only 1 element */
+    if (q->size == 1) {
+        return;
+    }
+    /* Initialize prev, curr and next pointers */
+    list_ele_t *prev = NULL;
+    list_ele_t *curr = q->head;
+    list_ele_t *next = NULL;
+    /* Reverse the linked list using 3 pointers method */
+    while (curr) {
+        next = curr->next;
+        curr->next = prev;
+        prev = curr;
+        curr = next;
+    }
+    /* Exchange the original head and tail pointers */
+    list_ele_t *tmp = q->head;
+    q->head = q->tail;
+    q->tail = tmp;
+    return;
 }
 
 /*
