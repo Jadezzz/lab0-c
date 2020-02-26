@@ -12,8 +12,13 @@
 queue_t *q_new()
 {
     queue_t *q = malloc(sizeof(queue_t));
-    /* TODO: What if malloc returned NULL? */
+    /* Return NULL if malloc failed */
+    if (!q)
+        return NULL;
+    /* Initialization of fields */
     q->head = NULL;
+    q->tail = NULL;
+    q->size = 0;
     return q;
 }
 
@@ -81,7 +86,11 @@ bool q_remove_head(queue_t *q, char *sp, size_t bufsize)
  */
 int q_size(queue_t *q)
 {
-    return q->size;
+    /* Check if q is valid */
+    if (!q)
+        return 0;
+    else
+        return q->size;
 }
 
 /*

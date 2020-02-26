@@ -24,9 +24,8 @@ typedef struct ELE {
 
 /* Queue structure */
 typedef struct {
-    list_ele_t *head;   /* Head of the linked list of elements */
-    list_ele_t *tail;   /* Tail of the linked list of elements */
-    unsigned long size; /* Size of the linked list */
+    list_ele_t *head, *tail; /* Head and tail of the linked list of elements */
+    unsigned long size;      /* Size of the linked list */
 } queue_t;
 
 /* Operations on queue */
