@@ -40,12 +40,31 @@ void q_free(queue_t *q)
 bool q_insert_head(queue_t *q, char *s)
 {
     list_ele_t *newh;
-    /* TODO: What should you do if the q is NULL? */
+    char *value;
+    /* Return false if q is NULL */
+    if (!q)
+        return false;
+    /* Allocate space for list_ele_t */
     newh = malloc(sizeof(list_ele_t));
-    /* Don't forget to allocate space for the string and copy it */
-    /* What if either call to malloc returns NULL? */
+    unsigned int value_length = strlen(s);
+    /* Allocate space for string value */
+    value = malloc(value_length + 1);
+    /* Return false if malloc could not allocate space */
+    if (!newh || !value)
+        return false;
+    memset(value, '\0', value_length + 1);
+    /* Copy input string to allocated space */
+    strncpy(value, s, value_length);
+    /* Assign value and change head */
+    newh->value = value;
     newh->next = q->head;
-    q->head = newh;
+    /* If the queue was empty, assign tail pointer to its new head */
+    if (!newh->next) {
+        q->head = q->tail = newh;
+    } else
+        q->head = newh;
+    /* Change the size of the queue */
+    q->size++;
     return true;
 }
 
