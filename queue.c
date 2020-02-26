@@ -59,11 +59,11 @@ bool q_insert_head(queue_t *q, char *s)
     newh->value = value;
     newh->next = q->head;
     /* If the queue was empty, assign tail pointer to its new head */
-    if (!newh->next) {
+    if (q->size == 0) {
         q->head = q->tail = newh;
     } else
         q->head = newh;
-    /* Change the size of the queue */
+    /* Update the size of the queue */
     q->size++;
     return true;
 }
@@ -77,10 +77,37 @@ bool q_insert_head(queue_t *q, char *s)
  */
 bool q_insert_tail(queue_t *q, char *s)
 {
-    /* TODO: You need to write the complete code for this function */
-    /* Remember: It should operate in O(1) time */
-    /* TODO: Remove the above comment when you are about to implement. */
-    return false;
+    list_ele_t *newh;
+    char *value;
+    /* Return false if q is NULL */
+    if (!q)
+        return false;
+    /* Allocate space for list_ele_t */
+    newh = malloc(sizeof(list_ele_t));
+    unsigned int value_length = strlen(s);
+    /* Allocate space for string value */
+    value = malloc(value_length + 1);
+    /* Return false if malloc could not allocate space */
+    if (!newh || !value)
+        return false;
+    memset(value, '\0', value_length + 1);
+    /* Copy input string to allocated space */
+    strncpy(value, s, value_length);
+    /* Assign value */
+    newh->value = value;
+    newh->next = NULL;
+    /* If the queue was empty, point both head and tail to newh*/
+    if (q->size == 0) {
+        q->head = q->tail = newh;
+    } else {
+        /* If the queue was not empty, concat newh behind tail and update tail
+         */
+        q->tail->next = newh;
+        q->tail = newh;
+    }
+    /* Update the size of the queue */
+    q->size++;
+    return true;
 }
 
 /*
