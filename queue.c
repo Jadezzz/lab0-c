@@ -25,7 +25,21 @@ queue_t *q_new()
 /* Free all storage used by queue */
 void q_free(queue_t *q)
 {
-    /* TODO: How about freeing the list elements and the strings? */
+    /* If queue is NULL, no need to free */
+    if (!q) {
+        return;
+    }
+    /* Extract first element */
+    list_ele_t *cur = q->head;
+    list_ele_t *tmp = NULL;
+    while (cur) {
+        tmp = cur;
+        cur = cur->next;
+        /* Free value space */
+        free(tmp->value);
+        /* Free element structure */
+        free(tmp);
+    }
     /* Free queue structure */
     free(q);
 }
@@ -46,12 +60,18 @@ bool q_insert_head(queue_t *q, char *s)
         return false;
     /* Allocate space for list_ele_t */
     newh = malloc(sizeof(list_ele_t));
+    /* Check if space is allocated */
+    if (!newh) {
+        return false;
+    }
     unsigned int value_length = strlen(s);
     /* Allocate space for string value */
     value = malloc(value_length + 1);
-    /* Return false if malloc could not allocate space */
-    if (!newh || !value)
+    /* Check if space is allocated */
+    if (!value) {
+        free(newh);
         return false;
+    }
     memset(value, '\0', value_length + 1);
     /* Copy input string to allocated space */
     strncpy(value, s, value_length);
@@ -84,12 +104,18 @@ bool q_insert_tail(queue_t *q, char *s)
         return false;
     /* Allocate space for list_ele_t */
     newh = malloc(sizeof(list_ele_t));
+    /* Check if space is allocated */
+    if (!newh) {
+        return false;
+    }
     unsigned int value_length = strlen(s);
     /* Allocate space for string value */
     value = malloc(value_length + 1);
-    /* Return false if malloc could not allocate space */
-    if (!newh || !value)
+    /* Check if space is allocated */
+    if (!value) {
+        free(newh);
         return false;
+    }
     memset(value, '\0', value_length + 1);
     /* Copy input string to allocated space */
     strncpy(value, s, value_length);
