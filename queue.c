@@ -219,6 +219,63 @@ void q_reverse(queue_t *q)
     return;
 }
 
+list_ele_t *merge(list_ele_t *l1, list_ele_t *l2)
+{
+    /* Concat list in ascending order iteratively */
+    list_ele_t *head = NULL;
+    list_ele_t *cur = NULL;
+    /* While l1 and l2 both have elements */
+    while (l1 && l2) {
+        if (strcmp(l1->value, l2->value) < 0) {
+            if (!head) {
+                head = cur = l1;
+            } else {
+                cur->next = l1;
+                cur = cur->next;
+            }
+            l1 = l1->next;
+        } else {
+            if (!head) {
+                head = cur = l2;
+            } else {
+                cur->next = l2;
+                cur = cur->next;
+            }
+            l2 = l2->next;
+        }
+    }
+    /* Concat the rest of the list */
+    if (!l1)
+        cur->next = l2;
+    if (!l2)
+        cur->next = l1;
+    return head;
+}
+
+list_ele_t *merge_sort_list(list_ele_t *head)
+{
+    /*
+     * Do nothing if head is NULL
+     * or the list has only one element
+     */
+    if (!head || !head->next)
+        return head;
+    /* Use fast and slow pointers to seperate the list into two halves */
+    list_ele_t *fast = head->next;
+    list_ele_t *slow = head;
+    while (fast && fast->next) {
+        slow = slow->next;
+        fast = fast->next->next;
+    }
+    fast = slow->next;
+    slow->next = NULL;
+    /* Sort each half of the list */
+    list_ele_t *l1 = merge_sort_list(head);
+    list_ele_t *l2 = merge_sort_list(fast);
+    /* merge sorted lists */
+    return merge(l1, l2);
+}
+
 /*
  * Sort elements of queue in ascending order
  * No effect if q is NULL or empty. In addition, if q has only one
@@ -226,6 +283,15 @@ void q_reverse(queue_t *q)
  */
 void q_sort(queue_t *q)
 {
-    /* TODO: You need to write the code for this function */
-    /* TODO: Remove the above comment when you are about to implement. */
+    /* Return if q is NULL or empty or has only one element */
+    if (!q || q->size == 0 || q->size == 1)
+        return;
+    /* Change the head to sorted list */
+    q->head = merge_sort_list(q->head);
+    /* Change the new tail */
+    list_ele_t *tail = q->head;
+    while (tail->next) {
+        tail = tail->next;
+    }
+    q->tail = tail;
 }
